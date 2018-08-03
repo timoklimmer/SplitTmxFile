@@ -15,11 +15,11 @@ The number of bytes after which the script should initiate a split. May also be 
 The output directory.
 
 .EXAMPLE
-.\Split-TmxFile.ps1 -FilePath SomeRandomTmxFile.tmx -SplitThreshold 2MB
+.\Split-TmxFile.ps1 -InputFile SomeRandomTmxFile.tmx -SplitThreshold 2MB
 Splits the SomeRandomTmxFile.tmx whenever 2MB have been written.
 
 .EXAMPLE
-.\Split-TmxFile.ps1 -FilePath SomeRandomTmxFile.tmx -SplitThreshold 2MB -OutputDir "C:\SomeOutputDir"
+.\Split-TmxFile.ps1 -InputFile SomeRandomTmxFile.tmx -SplitThreshold 2MB -OutputDir "C:\SomeOutputDir"
 Splits the SomeRandomTmxFile.tmx whenever 2MB have been written and stores the output files in C:\SomeOutputDir.
 
 .NOTES
@@ -33,7 +33,7 @@ Splits the SomeRandomTmxFile.tmx whenever 2MB have been written and stores the o
 # Parameters
 param (
 	[Parameter(Mandatory = $True, Position=0, HelpMessage="The file to split.")]
-    [ValidateNotNullOrEmpty()]
+	[ValidateNotNullOrEmpty()]
 	[string] $InputFile,
 
 	[Parameter(Mandatory = $False, HelpMessage="The output directory.")]
@@ -47,11 +47,11 @@ param (
 	# stop on error
 	$ErrorActionPreference = "Stop";
 	# log start time
-    $startTime = Get-Date;
-    # resolve input file
-    $InputFile = Resolve-Path $InputFile
-    # resolve output directory
-    $OutputDir = Resolve-Path $OutputDir
+	$startTime = Get-Date;
+	# resolve input file
+	$InputFile = Resolve-Path $InputFile
+	# resolve output directory
+	$OutputDir = Resolve-Path $OutputDir
 
 # helper functions
 # Format-FileSize
