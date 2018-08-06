@@ -25,7 +25,7 @@ Splits the SomeRandomTmxFile.tmx whenever 2MB have been written and stores the o
 .NOTES
 - The script does not load the entire file into memory, so it should be able to split files of any size.
 - The script does not guarantee a maximum file size. It rather initiates the split after SplitThreshold bytes. Hence, the resulting output files can be larger than the size specified by SplitThreshold but should have roughly the size of SplitThreshold.
-- Written and tested in PowerShell 5.1 but may run in older versions as well. Ensure proper testing if you are using other versions of PowerShell.
+- Written and tested in PowerShell 5.1 and PowerShell Core 6.0.3 but may run in other versions as well. Ensure proper testing if you are using other versions of PowerShell.
 - The script assumes that the TMX's XML is formatted. It will not work if all XML is in a single line.
 - This script is provided "as is". Feel free to use and modify if needed.
 #>
@@ -74,7 +74,13 @@ function Get-Encoding([string] $filePath) {
     }
 
     # else read the first 4 bytes and compute the result based on these
-    $byte = Get-Content -Encoding byte -ReadCount 4 -TotalCount 4 -Path $filePath;
+    # note: PowerShell Core does not support Encoding Byte, hence we have to use -AsByteStream
+    #       which is not supported in PowerShell Desktop ;-)
+    $byte = if ($PSVersioNTable.PSEdition -eq "Core") {
+        Get-Content -AsByteStream -ReadCount 4 -TotalCount 4 -Path $filePath;
+    } else {
+        Get-Content -Encoding Byte -ReadCount 4 -TotalCount 4 -Path $filePath;
+    }
 
     if ($byte[0] -eq 0xef -and $byte[1] -eq 0xbb -and $byte[2] -eq 0xbf ) {
         # UTF-8
